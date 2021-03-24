@@ -71,7 +71,7 @@ export default class App extends Component {
     fetch(`https://google-translate20.p.rapidapi.com/translate?text=${inputText}&tl=${randomLn}&sl=en`, {
       method: 'GET',
       headers: {
-        'x-rapidapi-key': '38e57b41b5mshb118bafd5b093b1p1b14f7jsn1054fbef5a13',
+        'x-rapidapi-key': 'Your key',
         'x-rapidapi-host': 'google-translate20.p.rapidapi.com',
       },
     })
@@ -93,7 +93,7 @@ export default class App extends Component {
 
   handleImg(e) {
     const { inputText } = this.state;
-    fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyA80SEzx6zaniPCTWk_D5FLm4JkHmnajt8&cx=4c16a0db4570f0d5d&q=${inputText}&searchType=image`)
+    fetch(`https://www.googleapis.com/customsearch/v1?key=YOUR_KEY&cx=YOUR_CX&q=${inputText}&searchType=image`)
       .then(res => res.json())
       .then(data => this.setState({ img: data.items[0].link }))
       .catch(err => console.log(err));
