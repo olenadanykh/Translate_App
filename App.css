@@ -1,14 +1,15 @@
 body{
-  background-color: rgb(224, 237, 250);
+  background-color: rgb(208, 245, 245);
 }
 .app {
   text-align: center;
   margin: 40px;
+  margin-bottom: 10px;
 }
 .header{
 
-  color:rgb(7, 7, 78);
-  font-size: 70px;
+  color:rgb(15, 56, 61);
+  font-size: 40px;
   font-weight: bold;
 }
 input{
@@ -17,13 +18,18 @@ input{
   padding: 20px;
   border-radius: 10px;
   background-color: rgb(254, 254, 255);
-  border: 1px solid rgb(77, 77, 194);
+  border: 1px solid rgb(1, 54, 56);
   
 }
 button{
     width:20%;
     padding: 20px;
-    border: 1px solid rgb(77, 77, 194);
+    border: 1px solid rgb(1, 54, 56);
     background-color:  rgb(254, 254, 255);
     border-radius: 10px;
+    
+ 
+}
+button:hover {
+opacity: 0.6;
 }

@@ -28,8 +28,9 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    const { count } = this.state;
-    if (count !== 5) this.setState({ count: count + 1 });
+    // console.log('hello from didmount');
+    // const { count } = this.state;
+    // if (count !== 5) this.setState({ count: count + 1 });
 
     fetch('https://google-translate20.p.rapidapi.com/languages', {
       method: 'GET',
@@ -47,13 +48,14 @@ export default class App extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    // console.log('hello from didupdate');
     if (prevState.count !== this.state.count) {
       this.interval = setInterval(() => {
-        if (this.state.count >= 5) clearInterval(this.interval);
+        if (this.state.count === 5) clearInterval(this.interval);
         else {
           this.fetchText();
         }
-      }, 8000);
+      }, 6000);
     }
   }
 
@@ -62,6 +64,7 @@ export default class App extends Component {
   }
 
   fetchText(e) {
+    console.log('hello from fetch');
     // e.preventDefault();
     const {
       count, inputText, languages,
@@ -71,7 +74,7 @@ export default class App extends Component {
     fetch(`https://google-translate20.p.rapidapi.com/translate?text=${inputText}&tl=${randomLn}&sl=en`, {
       method: 'GET',
       headers: {
-        'x-rapidapi-key': 'Your key',
+        'x-rapidapi-key': '38e57b41b5mshb118bafd5b093b1p1b14f7jsn1054fbef5a13',
         'x-rapidapi-host': 'google-translate20.p.rapidapi.com',
       },
     })
@@ -93,9 +96,13 @@ export default class App extends Component {
 
   handleImg(e) {
     const { inputText } = this.state;
-    fetch(`https://www.googleapis.com/customsearch/v1?key=YOUR_KEY&cx=YOUR_CX&q=${inputText}&searchType=image`)
+    // `      https://www.googleapis.com/customsearch/v1?key=AIzaSyA80SEzx6zaniPCTWk_D5FLm4JkHmnajt8&cx=4c16a0db4570f0d5d&q=${inputText}&searchType=image`
+    fetch(`https://www.googleapis.com/customsearch/v1?key=AIzaSyA3htdtj69zMGsz8Rnzp8_heM7QlFh2A8o&cx=4c16a0db4570f0d5d&q=${inputText}&searchType=image`)
       .then(res => res.json())
-      .then(data => this.setState({ img: data.items[0].link }))
+      .then((data) => {
+        console.log('Image', data.items[0].link);
+        this.setState({ img: data.items[0].link });
+      })
       .catch(err => console.log(err));
   }
 
@@ -114,7 +121,6 @@ export default class App extends Component {
 
 
   render() {
-    console.log('state', this.state);
     const {
       inputText, outputText, img, outputLn, inputLn, count, clickeble,
     } = this.state;
@@ -122,8 +128,12 @@ export default class App extends Component {
     if (!clickeble) {
       return (
         <div className="app">
-          <h1 className="header">Let's translate</h1>
-          <input placeholder="  enter text" type="text" value={this.inputText} onChange={this.handleChange} />
+          <h1 className="header">
+            {' '}
+            Do you know what the same word means in different languages?
+            <p> ... let’s discover</p>
+          </h1>
+          <input placeholder="type in English" type="text" value={this.inputText} onChange={this.handleChange} />
           <button onClick={() => { fetchText(); handleClick(); handleImg(); }}> Translate </button>
         </div>
       );
