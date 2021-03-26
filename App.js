@@ -13,6 +13,7 @@ export default class App extends Component {
     super(props);
     this.state = {
       inputText: '',
+      firstTimeInput: '',
       outputText: '',
       inputLn: '',
       outputLn: '',
@@ -20,18 +21,16 @@ export default class App extends Component {
       count: 0,
       languages: [],
       clickeble: false,
+
     };
-    this.fetchText = this.fetchText.bind(this);
+    this.fetchData = this.fetchData.bind(this);
+    this.fetchRemainingData = this.fetchRemainingData.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleImg = this.handleImg.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
-    // console.log('hello from didmount');
-    // const { count } = this.state;
-    // if (count !== 5) this.setState({ count: count + 1 });
-
     fetch('https://google-translate20.p.rapidapi.com/languages', {
       method: 'GET',
       headers: {
@@ -51,11 +50,13 @@ export default class App extends Component {
     // console.log('hello from didupdate');
     if (prevState.count !== this.state.count) {
       this.interval = setInterval(() => {
-        if (this.state.count === 5) clearInterval(this.interval);
-        else {
-          this.fetchText();
+        if (this.state.count === 5) {
+          clearInterval(this.interval);
+        } else {
+          this.fetchRemainingData();
+          // this.handleImg();
         }
-      }, 6000);
+      }, 8000);
     }
   }
 
@@ -63,15 +64,16 @@ export default class App extends Component {
     clearInterval(this.interval);
   }
 
-  fetchText(e) {
-    console.log('hello from fetch');
+  async fetchData(e) {
     // e.preventDefault();
     const {
-      count, inputText, languages,
+      count, inputText, languages, outputText, outputLn,
     } = this.state;
     const ln = Object.keys(languages);
     const randomLn = ln[Math.floor(Math.random() * ln.length)];
-    fetch(`https://google-translate20.p.rapidapi.com/translate?text=${inputText}&tl=${randomLn}&sl=en`, {
+    const url = `https://google-translate20.p.rapidapi.com/translate?text=${inputText}&tl=${randomLn}&sl=en`;
+    await this.handleImg();
+    await fetch((url), {
       method: 'GET',
       headers: {
         'x-rapidapi-key': 'YOUR_API_KEY',
@@ -81,11 +83,11 @@ export default class App extends Component {
       .then(response => response.json())
       .then((data) => {
         this.setState({
-          // inputText: outputText,
           outputText: data.data.translation,
           inputLn: 'English',
           outputLn: languages[randomLn],
           count: count + 1,
+          outputD: data.data,
         });
       })
       .catch((err) => {
@@ -93,10 +95,46 @@ export default class App extends Component {
       });
   }
 
+  async fetchRemainingData(e) {
+    // e.preventDefault();
+    const {
+      count, inputText, languages, outputText, outputLn,
+    } = this.state;
+    const ln = Object.keys(languages);
+    let randomLn = '';
+    if (count === 4) randomLn = 'en';
+    else randomLn = ln[Math.floor(Math.random() * ln.length)];
+    const url = `https://google-translate20.p.rapidapi.com/translate?text=${outputText}&tl=${randomLn}&sl=${outputLn}`;
+
+    await fetch((url), {
+      method: 'GET',
+      headers: {
+        'x-rapidapi-key': 'YOUR_API_KEY',
+        'x-rapidapi-host': 'google-translate20.p.rapidapi.com',
+      },
+    })
+      .then(response => response.json())
+      .then((data) => {
+        this.setState({
+          inputText: outputText,
+          outputText: data.data.translation,
+          inputLn: outputLn,
+          outputLn: languages[randomLn],
+          count: count + 1,
+        });
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+    await this.handleImg();
+  }
 
   handleImg(e) {
-    const { inputText } = this.state;
-    fetch(`https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX&q=${inputText}&searchType=image`)
+    const { inputText, count, outputText } = this.state;
+    let url = '';
+    if (count === 0) url = `https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX&q=${inputText}&searchType=image`;
+    else url = `https://www.googleapis.com/customsearch/v1?key=YOUR_API_KEY&cx=YOUR_CX&q=${outputText}&searchType=image`;
+    fetch(url)
       .then(res => res.json())
       .then((data) => {
         console.log('Image', data.items[0].link);
@@ -109,6 +147,7 @@ export default class App extends Component {
     // console.log(event.target.value);
     this.setState({
       inputText: event.target.value,
+      firstTimeInput: event.target.value,
     });
   }
 
@@ -118,10 +157,10 @@ export default class App extends Component {
     });
   }
 
-
   render() {
+    console.log(this.state);
     const {
-      inputText, outputText, img, outputLn, inputLn, count, clickeble,
+      inputText, outputText, img, outputLn, inputLn, count, clickeble, firstTimeInput,
     } = this.state;
     const { handleImg, fetchText, handleClick } = this;
     if (!clickeble) {
@@ -133,7 +172,7 @@ export default class App extends Component {
             <p> ... let’s discover</p>
           </h1>
           <input placeholder="type in English" type="text" value={this.inputText} onChange={this.handleChange} />
-          <button onClick={() => { fetchText(); handleClick(); handleImg(); }}> Translate </button>
+          <button onClick={() => { this.fetchData(); handleClick(); }}> Translate </button>
         </div>
       );
     }
@@ -141,7 +180,7 @@ export default class App extends Component {
       <div className="app">
         <h1 className="header">Let's translate</h1>
         <input placeholder="  enter text" type="text" value={this.inputText} onChange={this.handleChange} />
-        <button onClick={() => { fetchText(); handleImg(); }}> Translate </button>
+        <button onClick={() => { this.fetchData(); }}> Translate </button>
         <div>
           <Translate
             inputText={inputText}
@@ -152,6 +191,7 @@ export default class App extends Component {
             handleImg={handleImg}
             fetchText={fetchText}
             count={count}
+            firstTimeInput={firstTimeInput}
 
           />
         </div>

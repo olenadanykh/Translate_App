@@ -18,8 +18,43 @@ export default class Content extends Component {
       img,
       outputLn,
       inputLn,
+      count,
+      firstTimeInput,
     } = this.props;
 
+
+    if (count === 5) {
+      return (
+        <div className="content">
+          <div className="row">
+            <h1 className="column">
+              {inputText}
+              <p>{inputLn}</p>
+            </h1>
+            <h1 className="column">
+              {outputText}
+              <p>{outputLn}</p>
+            </h1>
+          </div>
+          <h2 className="contentoutput">
+            After 5 rounds of randomly translating, input
+            {' '}
+            {firstTimeInput}
+            {' '}
+            becomes
+            {' '}
+            {outputText}
+          </h2>
+          <div className="image">
+            <img
+              src={img}
+              alt=""
+            />
+          </div>
+        </div>
+
+      );
+    }
     return (
       <div className="content">
         <div className="row">
