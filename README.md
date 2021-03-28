@@ -1,5 +1,5 @@
 # Translate_App
-App translate input word to randomly languages, helping us to discover how the same word is written in other languages around the world.
+App translate input word/text to randomly languages & shows  how same input could be changed after number of rounds randomly translating it.
 
 ![](demo.gif)
 
@@ -27,7 +27,7 @@ Finally, you need to start a local web server. Run:
 }
 ```
 
-## Get Your Rapid API key & paste it into App.js
+## Get Your Rapid API key & change AppConfig.js file with your Information.
 
 1.Follow the link(https://rapidapi.com/datascraper/api/google-translate20).
 2.Subscribe to get your API key.
