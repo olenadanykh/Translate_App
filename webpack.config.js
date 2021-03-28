@@ -8,6 +8,7 @@ module.exports = {
     publicPath: '/build/',
     filename: 'bundle.js',
   },
+
   module: {
     rules: [
       {
@@ -27,6 +28,8 @@ module.exports = {
       },
     ],
   },
+  //
+
   devServer: {
     hot: true,
     compress: true,

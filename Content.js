@@ -20,10 +20,28 @@ export default class Content extends Component {
       inputLn,
       count,
       firstTimeInput,
+      rounds,
+      resultData,
     } = this.props;
+    let hasBeenChanged = '';
+    if (firstTimeInput === outputText.toLowerCase()) hasBeenChanged = 'still';
+    else hasBeenChanged = 'has been changed to';
+    const resData = resultData.map((el, i) => (
+      <li key={i}>
+        {el.input}
+        (
+        {el.inputLanguage}
+        )
+        {'  -->  '}
+        {el.output}
+        (
+        {el.outputLanguage}
+        )
+      </li>
+    ));
 
-
-    if (count === 5) {
+    console.log(resData, resultData, 'RESDATA');
+    if (count === Number(rounds)) {
       return (
         <div className="content">
           <div className="row">
@@ -31,19 +49,27 @@ export default class Content extends Component {
               {inputText}
               <p>{inputLn}</p>
             </h1>
+            <ul className="column">
+              {resData}
+            </ul>
+            {/* <li>{lastEl}</li> */}
             <h1 className="column">
               {outputText}
               <p>{outputLn}</p>
             </h1>
           </div>
           <h2 className="contentoutput">
-            After 5 rounds of randomly translating, input
+            After
             {' '}
-            {firstTimeInput}
+            {rounds}
             {' '}
-            becomes
+            rounds of randomly translating, input
             {' '}
-            {outputText}
+            {firstTimeInput.toUpperCase()}
+            {' '}
+            {hasBeenChanged}
+            {' '}
+            {outputText.toUpperCase()}
           </h2>
           <div className="image">
             <img
@@ -62,12 +88,17 @@ export default class Content extends Component {
             {inputText}
             <p>{inputLn}</p>
           </h1>
+          <ul className="column">
+            {resData}
+          </ul>
           <h1 className="column">
             {outputText}
             <p>{outputLn}</p>
 
           </h1>
+
         </div>
+
         <div className="image">
           <img
             src={img}
